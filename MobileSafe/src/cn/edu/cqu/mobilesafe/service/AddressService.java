@@ -63,6 +63,10 @@ public class AddressService extends Service {
 	public void onDestroy() {
 		super.onDestroy();
 		tm.listen(listener, PhoneStateListener.LISTEN_NONE);
+		listener = null;
+		
+		unregisterReceiver(receiver);
+		receiver = null;
 	}
 
 	private class MyPhoneStateListener extends PhoneStateListener {

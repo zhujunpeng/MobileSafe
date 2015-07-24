@@ -6,6 +6,7 @@ import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -39,13 +40,16 @@ public class Setup2Activity extends BaseSetupActivity {
 			public void onClick(View v) {
 				Editor editor = sp.edit();
 				if (siv_setup2_sim.isChecked()) {
+					Log.i(TAG, "没有勾选状态。。");
 					siv_setup2_sim.setChecked(false);
 					editor.putString("sim", null);
 				}else {
 					siv_setup2_sim.setChecked(true);
 					// 保存SIM卡的序列号
 					String number = tm.getSimSerialNumber();
-					editor.putString("sim", number);
+					Log.i(TAG, "勾选状态。。保存sim卡信息" + number);
+					editor.putString("sim", "5413513213435scf");
+//					editor.putString("sim", number);
 				}
 				editor.commit();
 			}

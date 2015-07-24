@@ -31,6 +31,14 @@
         zjp:desc_on="来电显示开启了"
         zjp:title="设置是否开启来电显示" >
     </cn.edu.cqu.mobilesafe.ui.SettingItemView>
+    <cn.edu.cqu.mobilesafe.ui.SettingItemView
+        android:id="@+id/siv_callsmsm_safe"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        zjp:desc_off="黑名单拦截关闭"
+        zjp:desc_on="黑名单拦截开启"
+        zjp:title="黑名单拦截设置" >
+    </cn.edu.cqu.mobilesafe.ui.SettingItemView>
 
     <cn.edu.cqu.mobilesafe.ui.SettingClickView
         android:id="@+id/scv_changebg"

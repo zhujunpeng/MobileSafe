@@ -61,7 +61,8 @@
         </receiver>
         <service android:name="cn.edu.cqu.mobilesafe.service.GPSService"></service>
         <service android:name="cn.edu.cqu.mobilesafe.service.AddressService"></service>
-         <receiver android:name="cn.edu.cqu.lockscream.MyAdmin"
+        <service android:name="cn.edu.cqu.mobilesafe.service.CallSmsSafeService"></service>
+        <receiver android:name="cn.edu.cqu.lockscream.MyAdmin"
         android:label="@string/sample_device_admin"
         android:description="@string/sample_device_admin_description"
         android:permission="android.permission.BIND_DEVICE_ADMIN">

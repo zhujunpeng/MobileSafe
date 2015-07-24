@@ -39,6 +39,22 @@ public class BlackNumberDAO {
 		return reslut; 
 	}
 	/**
+	 * 查找数据库中指定号码的拦截模式
+	 * @param number
+	 * @return 默认返回null
+	 */
+	public String findMode(String number){
+		String reslut = null;
+		SQLiteDatabase db = helper.getReadableDatabase();
+		Cursor cursor = db.rawQuery("select mode from blacknumber where number = ?", new String[]{number});
+		if (cursor.moveToNext()) {
+			reslut = cursor.getString(0);
+		}
+		cursor.close();
+		db.close();
+		return reslut; 
+	}
+	/**
 	 * 添加黑名单
 	 * @param number
 	 * @param mode

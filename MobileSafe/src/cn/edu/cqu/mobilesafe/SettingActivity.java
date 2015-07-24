@@ -12,16 +12,17 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import cn.edu.cqu.mobilesafe.service.AddressService;
+import cn.edu.cqu.mobilesafe.service.CallSmsSafeService;
 import cn.edu.cqu.mobilesafe.ui.SettingClickView;
 import cn.edu.cqu.mobilesafe.ui.SettingItemView;
 import cn.edu.cqu.mobilesafe.utils.ServiceUtils;
 
 public class SettingActivity extends Activity {
 
-	private SettingItemView siv_update, siv_address;
+	private SettingItemView siv_update, siv_address,siv_callsmsm_safe;
 	private SettingClickView scv_changebg;
 	private SharedPreferences sp;
-	private Intent intent_address;
+	private Intent intent_address,callsmsIntent;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +33,7 @@ public class SettingActivity extends Activity {
 		sp = getSharedPreferences("config", MODE_PRIVATE);
 		siv_update = (SettingItemView) findViewById(R.id.siv_update);
 		siv_address = (SettingItemView) findViewById(R.id.siv_address);
+		siv_callsmsm_safe = (SettingItemView) findViewById(R.id.siv_callsmsm_safe);
 		
 		// 设置改变背景
 		scv_changebg = (SettingClickView) findViewById(R.id.scv_changebg);
@@ -119,6 +121,29 @@ public class SettingActivity extends Activity {
 				}
 			}
 		});
+		
+		// 黑名单拦截状态
+		callsmsIntent = new Intent(SettingActivity.this, CallSmsSafeService.class);
+		
+		siv_callsmsm_safe.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+
+				// 判断是否选中
+				if (siv_callsmsm_safe.isChecked()) {
+					// 变为非选中状态
+					siv_callsmsm_safe.setChecked(false);
+					// 关闭服务
+					stopService(callsmsIntent);
+				} else {
+					// 选中状态
+					siv_callsmsm_safe.setChecked(true);
+					// 打开服务
+					startService(callsmsIntent);
+				}
+			}
+		});
 	}
 
 	@Override
@@ -131,6 +156,14 @@ public class SettingActivity extends Activity {
 			siv_address.setChecked(true);
 		}else {
 			siv_address.setChecked(false);
+		}
+		boolean isCallSmsmServiceRunning = ServiceUtils.isServiceRunning(SettingActivity.this,
+				"cn.edu.cqu.mobilesafe.service.CallSmsSafeService");
+		if (isCallSmsmServiceRunning) {
+			// 服务已经开启
+			siv_callsmsm_safe.setChecked(true);
+		}else {
+			siv_callsmsm_safe.setChecked(false);
 		}
 	}
 }
