@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:zjp="http://schemas.android.com/apk/res/cn.edu.cqu.mobilesafe"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    <TextView 
+        android:background="#8866ff00"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:gravity="center"
+        android:textSize="22sp"
+        android:textColor="#000000"
+        android:text="2.手机卡绑定"/>
+    
+    <TextView 
+        style="@style/text_content_style"
+        android:text="通过绑定SIM卡:"
+       />
+    <TextView 
+        style="@style/text_content_style"
+        android:text="下次重启手机如果发现手机sim变化\n就会发出报警短信"
+       />
+    <cn.edu.cqu.mobilesafe.ui.SettingItemView 
+        android:id="@+id/siv_setup2_sim"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        zjp:title = "点击绑定sim卡"
+        zjp:desc_on = "SIM卡没有绑定"
+        zjp:desc_off = "SIM卡已经绑定"
+        ></cn.edu.cqu.mobilesafe.ui.SettingItemView>
+    
+    <LinearLayout 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:orientation="horizontal">
+        <ImageView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/presence_invisible"/>
+        <ImageView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/presence_online"/>
+        <ImageView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/presence_invisible"/>
+        <ImageView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/presence_invisible"/>
+    </LinearLayout>
+    <RelativeLayout 
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ImageView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/bind"/>
+        <Button 
+            style="@style/button_next_style"/>
+        <Button 
+            style="@style/button_pre_style"/>
+    </RelativeLayout>
+
+</LinearLayout>
