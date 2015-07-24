@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- 按下的状态 -->
+    <item android:drawable="@drawable/ic_delete_btn_focused" android:state_pressed="true"></item>
+   <!-- 选中 -->
+    <item android:drawable="@drawable/ic_delete_btn_focused" android:state_focused="true"></item>
+    <!-- 手移到上面 -->
+    <item android:drawable="@drawable/ic_delete_btn_focused" android:state_hovered="true"></item>
+    <!-- 默认 -->
+    <item android:drawable="@drawable/ic_delete_btn"></item>
+
+</selector>

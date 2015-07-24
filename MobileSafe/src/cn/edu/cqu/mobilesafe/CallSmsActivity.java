@@ -2,24 +2,33 @@ package cn.edu.cqu.mobilesafe;
 
 import java.util.List;
 
-import cn.edu.cqu.mobilesafe.db.BlackNumberDBOpenHelper;
-import cn.edu.cqu.mobilesafe.db.dao.BlackNumberDAO;
-import cn.edu.cqu.mobilesafedomain.BlackNumberInfo;
-
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+import cn.edu.cqu.mobilesafe.db.dao.BlackNumberDAO;
+import cn.edu.cqu.mobilesafedomain.BlackNumberInfo;
 
 public class CallSmsActivity extends Activity {
 	
 	private ListView lv_callsms_safe;
 	private List<BlackNumberInfo> infos;
 	private BlackNumberDAO dao;
+	private CallSmsSafeAdapter adapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +39,8 @@ public class CallSmsActivity extends Activity {
 		lv_callsms_safe = (ListView) findViewById(R.id.lv_callsms_safe);
 		dao = new BlackNumberDAO(this);
 		infos = dao.findAll();
-		lv_callsms_safe.setAdapter(new CallSmsSafeAdapter());
+		adapter = new CallSmsSafeAdapter();
+		lv_callsms_safe.setAdapter(adapter);
 	}
 	
 	private class CallSmsSafeAdapter extends BaseAdapter{
@@ -51,7 +61,7 @@ public class CallSmsActivity extends Activity {
 		}
 
 		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
+		public View getView(final int position, View convertView, ViewGroup parent) {
 			View view;
 			ViewHolder holder;
 			if (convertView == null) {
@@ -59,6 +69,7 @@ public class CallSmsActivity extends Activity {
 				holder = new ViewHolder();
 				holder.tv_item_balck_number = (TextView) view.findViewById(R.id.tv_item_balck_number);
 				holder.tv_item_balck_mode = (TextView) view.findViewById(R.id.tv_item_balck_mode);
+				holder.iv_delete_number = (ImageView) view.findViewById(R.id.iv_delete_number);
 				// 设置一个标示，当孩子生出来的时候找到他们的引用，存放在记事本里面，放在父亲的口袋
 				view.setTag(holder);
 			}else {
@@ -68,6 +79,7 @@ public class CallSmsActivity extends Activity {
 			holder = new ViewHolder();
 			holder.tv_item_balck_number = (TextView) view.findViewById(R.id.tv_item_balck_number);
 			holder.tv_item_balck_mode = (TextView) view.findViewById(R.id.tv_item_balck_mode);
+			holder.iv_delete_number = (ImageView) view.findViewById(R.id.iv_delete_number);
 			holder.tv_item_balck_number.setText(infos.get(position).getNumber());
 			if ("1".equals(infos.get(position).getMode())) {
 				holder.tv_item_balck_mode.setText("拦截电话");
@@ -76,6 +88,29 @@ public class CallSmsActivity extends Activity {
 			}else{
 				holder.tv_item_balck_mode.setText("全部拦截");
 			}
+			holder.iv_delete_number.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+//					dao.delete(infos.get(position).getNumber());
+					AlertDialog.Builder builder = new Builder(CallSmsActivity.this);
+					builder.setTitle("删除黑名单");
+					builder.setMessage("确定要删除该号码？");
+					builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+						
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							dao.delete(infos.get(position).getNumber());
+							// 删除该数据
+							infos.remove(position);
+							// 通知数据适配器更新数据
+							adapter.notifyDataSetChanged();
+						}
+					});
+					builder.setNegativeButton("取消", null);
+					builder.show();
+				}
+			});
 			return view;
 		}
 		
@@ -88,5 +123,71 @@ public class CallSmsActivity extends Activity {
 	static class ViewHolder{
 		TextView tv_item_balck_number;
 		TextView tv_item_balck_mode;
+		ImageView iv_delete_number;
+	}
+	/**
+	 * 添加黑名单
+	 * @param view
+	 */
+	
+	private EditText et_blacknumber;
+	private CheckBox cb_phone;
+	private CheckBox cb_sms;
+	private Button bt_ok;
+	private Button bt_cancel;
+	public void add_black_number(View view){
+		AlertDialog.Builder builder = new Builder(this);
+		final AlertDialog dialog = builder.create();
+		View dialog_black_number = View.inflate(getApplicationContext(), R.layout.dialog_add_blacknumber, null);
+		et_blacknumber = (EditText) dialog_black_number.findViewById(R.id.et_blacknumber);
+		cb_phone = (CheckBox) dialog_black_number.findViewById(R.id.cb_phone);
+		cb_sms = (CheckBox) dialog_black_number.findViewById(R.id.cb_sms);
+		bt_ok = (Button) dialog_black_number.findViewById(R.id.btn_ok);
+		bt_cancel = (Button) dialog_black_number.findViewById(R.id.btn_cancel);
+		dialog.setView(dialog_black_number);
+		dialog.show();
+		bt_cancel.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				dialog.dismiss();
+			}
+		});
+		bt_ok.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				String blacknumber = et_blacknumber.getText().toString().trim();
+				if (TextUtils.isEmpty(blacknumber)) {
+					Toast.makeText(getApplicationContext(), "黑名单号码不能为空", 0).show();
+					return;
+				}
+				String mode;
+				if (cb_phone.isChecked() && cb_sms.isChecked()) {
+					// 全部拦截
+					mode = "3";
+				}else if (cb_phone.isChecked()) {
+					// 拦截电话
+					mode = "1";
+				}else if(cb_sms.isChecked()){
+					// 短信拦截
+					mode = "2";
+				}else {
+					Toast.makeText(getApplicationContext(), "请选择拦截模式", 0).show();
+					return;
+				}
+				dao.add(blacknumber, mode);
+				// 更新ListView中的内容
+				BlackNumberInfo info = new BlackNumberInfo();
+				info.setMode(mode);
+				info.setNumber(blacknumber);
+				// 加到了末尾哦
+//				infos.add(info);
+				infos.add(0, info);
+				// 通知数据适配器更新数据
+				adapter.notifyDataSetChanged();
+				dialog.dismiss();
+			}
+		});
 	}
 }
