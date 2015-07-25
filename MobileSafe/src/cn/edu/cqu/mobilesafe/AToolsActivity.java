@@ -7,6 +7,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
 import android.widget.Toast;
 
 public class AToolsActivity extends Activity {
@@ -15,6 +16,7 @@ public class AToolsActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_atools);
 	}
@@ -40,6 +42,7 @@ public class AToolsActivity extends Activity {
 			@Override
 			public void run() {
 				try {
+					// SmsUtils里面实现的一个接口，里面有两个方法
 					SmsUtils.backuoSms(AToolsActivity.this,new BackUpCallBack() {
 						
 						@Override
@@ -79,5 +82,33 @@ public class AToolsActivity extends Activity {
 	 */
 	public void smsRestore(View v){
 		
+		pd = new ProgressDialog(this);
+		pd.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+		pd.setTitle("正在恢复短信");
+		pd.show();
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				try {
+					SmsUtils.restoreSms(AToolsActivity.this, true, new BackUpCallBack() {
+						
+						@Override
+						public void onSmsBackup(int progress) {
+							pd.setProgress(progress);
+						}
+						
+						@Override
+						public void SmsMaxBackup(int max) {
+							pd.setMax(max);
+						}
+					});
+				} catch (Exception e) {
+					e.printStackTrace();
+				}finally{
+					pd.dismiss();
+				}
+			}
+		}).start();
 	}
 }
