@@ -112,12 +112,14 @@ public class CallSmsSafeService extends Service {
 	}
 
 	/**
-	 * 删除通话记录
+	 * 利用content provider删除通话记录
 	 * @param incomingNumber
 	 */
 	public void deleteCallLog(String incomingNumber) {
 		ContentResolver resolver = getContentResolver();
+		// 获取通话记录的uri
 		Uri uri = Uri.parse("content://call_log/calls");
 		resolver.delete(uri, "number=?", new String[]{incomingNumber});
+//		resolver.query(uri, projection, selection, selectionArgs, sortOrder)
 	}
 }

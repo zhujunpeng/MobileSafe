@@ -23,5 +23,29 @@
         android:textColor="#000000"
         android:textSize="20sp"
         android:text="号码归属地查询"/>
+    <TextView
+        android:clickable="true" 
+        android:onClick="smsBackup"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@android:drawable/ic_menu_camera"
+        android:gravity="center_vertical"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        android:text="短信的备份"/>
+    <TextView
+        android:clickable="true" 
+        android:onClick="smsRestore"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@android:drawable/ic_menu_camera"
+        android:gravity="center_vertical"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        android:text="短信的还原"/>
    
 </LinearLayout>
