@@ -159,6 +159,7 @@ public class SmsUtils {
 				break;
 			}
 			enventType = parser.next();
+			fis.close();
 		}
 	}
 }
