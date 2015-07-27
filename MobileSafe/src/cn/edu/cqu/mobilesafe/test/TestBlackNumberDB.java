@@ -4,7 +4,7 @@ import java.util.List;
 
 import cn.edu.cqu.mobilesafe.db.BlackNumberDBOpenHelper;
 import cn.edu.cqu.mobilesafe.db.dao.BlackNumberDAO;
-import cn.edu.cqu.mobilesafedomain.BlackNumberInfo;
+import cn.edu.cqu.mobilesafe.domain.BlackNumberInfo;
 import android.test.AndroidTestCase;
 
 public class TestBlackNumberDB extends AndroidTestCase {

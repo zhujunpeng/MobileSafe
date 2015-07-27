@@ -24,7 +24,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import cn.edu.cqu.mobilesafe.db.dao.BlackNumberDAO;
-import cn.edu.cqu.mobilesafedomain.BlackNumberInfo;
+import cn.edu.cqu.mobilesafe.domain.BlackNumberInfo;
 
 public class CallSmsActivity extends Activity {
 
@@ -45,7 +45,7 @@ public class CallSmsActivity extends Activity {
 		ll_loading = (LinearLayout) findViewById(R.id.ll_loading);
 		lv_callsms_safe = (ListView) findViewById(R.id.lv_callsms_safe);
 		dao = new BlackNumberDAO(this);
-		
+
 		// 耗时操作放在子线程中
 		// infos = dao.findAll();
 		findblacknumber();
@@ -59,8 +59,9 @@ public class CallSmsActivity extends Activity {
 				case OnScrollListener.SCROLL_STATE_IDLE: // 空闲状态
 					// 判断当前listview滚动的位置
 					// 获取最后一条可见条目在集合里面的位置
-					int lastVisiblePosition = lv_callsms_safe.getLastVisiblePosition();
-					System.out.println("最后一个可见条目的位置---" + lastVisiblePosition);
+					int lastVisiblePosition = lv_callsms_safe
+							.getLastVisiblePosition();
+//					System.out.println("最后一个可见条目的位置---" + lastVisiblePosition);
 					// 到了最后一个可见位置后继续查找
 					if (lastVisiblePosition == infos.size() - 1) {
 						offset += maxnumber;
@@ -96,7 +97,7 @@ public class CallSmsActivity extends Activity {
 			public void run() {
 				if (infos == null) {
 					infos = dao.findPart(offset, maxnumber);
-				}else{
+				} else {
 					infos.addAll(dao.findPart(offset, maxnumber));
 				}
 				runOnUiThread(new Runnable() {
@@ -105,7 +106,7 @@ public class CallSmsActivity extends Activity {
 						if (adapter == null) {
 							adapter = new CallSmsSafeAdapter();
 							lv_callsms_safe.setAdapter(adapter);
-						}else {
+						} else {
 							// adapter存在的话，通知更新
 							adapter.notifyDataSetChanged();
 						}
@@ -153,13 +154,6 @@ public class CallSmsActivity extends Activity {
 				view = convertView;
 				holder = (ViewHolder) view.getTag();// 5%的效率提升
 			}
-			holder = new ViewHolder();
-			holder.tv_item_balck_number = (TextView) view
-					.findViewById(R.id.tv_item_balck_number);
-			holder.tv_item_balck_mode = (TextView) view
-					.findViewById(R.id.tv_item_balck_mode);
-			holder.iv_delete_number = (ImageView) view
-					.findViewById(R.id.iv_delete_number);
 			holder.tv_item_balck_number
 					.setText(infos.get(position).getNumber());
 			if ("1".equals(infos.get(position).getMode())) {
@@ -249,8 +243,8 @@ public class CallSmsActivity extends Activity {
 			public void onClick(View v) {
 				String blacknumber = et_blacknumber.getText().toString().trim();
 				if (TextUtils.isEmpty(blacknumber)) {
-					Toast.makeText(getApplicationContext(), "黑名单号码不能为空", 0)
-							.show();
+					Toast.makeText(getApplicationContext(), "黑名单号码不能为空",
+							Toast.LENGTH_SHORT).show();
 					return;
 				}
 				String mode;

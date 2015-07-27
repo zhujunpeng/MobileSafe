@@ -1,4 +1,4 @@
-package cn.edu.cqu.mobilesafedomain;
+package cn.edu.cqu.mobilesafe.domain;
 
 public class BlackNumberInfo {
 

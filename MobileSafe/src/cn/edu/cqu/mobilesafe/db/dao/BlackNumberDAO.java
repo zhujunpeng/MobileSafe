@@ -8,7 +8,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import cn.edu.cqu.mobilesafe.db.BlackNumberDBOpenHelper;
-import cn.edu.cqu.mobilesafedomain.BlackNumberInfo;
+import cn.edu.cqu.mobilesafe.domain.BlackNumberInfo;
 
 /**
  * 黑名单数据库的增删改查的业务
