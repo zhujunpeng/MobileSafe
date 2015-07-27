@@ -5,19 +5,24 @@ import java.util.List;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StatFs;
 import android.text.format.Formatter;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.edu.cqu.mobilesafe.domain.AppInfo;
@@ -43,6 +48,8 @@ public class AppManagerActivity extends Activity {
 	private List<AppInfo> systemAppInfos;
 	private AppInfoManageAdapter adapter;
 	private TextView tv_number;
+	
+	private PopupWindow popupWindow;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +109,8 @@ public class AppManagerActivity extends Activity {
 			@Override
 			public void onScroll(AbsListView view, int firstVisibleItem,
 					int visibleItemCount, int totalItemCount) {
+				// 滑动的时候消除窗体
+				dismissPopupWindows();
 				if (userAppInfos != null && systemAppInfos != null) {
 					tv_number.setVisibility(View.VISIBLE);
 					if (firstVisibleItem > userAppInfos.size()) {
@@ -110,6 +119,36 @@ public class AppManagerActivity extends Activity {
 						tv_number.setText("用户程序个数:" + userAppInfos.size() + "个");
 					}
 				}
+			}
+		});
+		
+		lv_app_manage.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				AppInfo appInfo;
+				if (position == 0 || position == userAppInfos.size() + 1) {
+					return;
+				}else if (position <= userAppInfos.size()) {
+					int newposition = position - 1;
+					appInfo = userAppInfos.get(newposition);
+				}else {
+					int newposition = position - 1 - userAppInfos.size() -1;
+					appInfo = systemAppInfos.get(newposition);
+				}
+				// 窗体存在一个的时候，删除窗体
+				dismissPopupWindows();
+				TextView contentView = new TextView(AppManagerActivity.this);
+				contentView.setTextColor(Color.BLACK);
+				contentView.setText(appInfo.getPakageName());
+				popupWindow = new PopupWindow(contentView, -2, -2);
+				popupWindow.setBackgroundDrawable(new ColorDrawable(Color.RED));
+				int [] location = new int[2];
+				view.getLocationInWindow(location);
+				popupWindow.showAtLocation(parent, Gravity.LEFT | Gravity.TOP, location[0], location[1]);
+				
+				
 			}
 		});
 	}
@@ -205,5 +244,17 @@ public class AppManagerActivity extends Activity {
 		// 获取可用扇区数量
 		long count = statFs.getAvailableBlocks();
 		return count * size;
+	}
+	private void dismissPopupWindows() {
+		if (popupWindow != null && popupWindow.isShowing()) {
+			popupWindow.dismiss();
+			popupWindow = null;
+		}
+	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		dismissPopupWindows();
 	}
 }
