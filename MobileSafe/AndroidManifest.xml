@@ -28,6 +28,7 @@
     <uses-permission android:name="android.permission.WRITE_SMS"/>
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT"/>
     <application
         android:allowBackup="true"
         android:icon="@drawable/icon"
@@ -55,6 +56,7 @@
         <activity android:name="cn.edu.cqu.mobilesafe.NumberAddressQueryActivity"></activity>
         <activity android:name="cn.edu.cqu.mobilesafe.CallSmsActivity"></activity>
         <activity android:name="cn.edu.cqu.mobilesafe.AppManagerActivity"></activity>
+        <activity android:name="cn.edu.cqu.mobilesafe.TaskManagerActivity"></activity>
         <receiver android:name="cn.edu.cqu.mobilesafe.receiver.BootCompeletReceiver">
             <intent-filter >
                 <!-- 监听开机启动 -->

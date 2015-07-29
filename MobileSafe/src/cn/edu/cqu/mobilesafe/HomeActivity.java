@@ -67,6 +67,9 @@ public class HomeActivity extends Activity {
 				case 1:// 进入通讯卫士
 					startActivity(new Intent(HomeActivity.this, CallSmsActivity.class));
 					break;
+				case 3:// 进入进程管理
+					startActivity(new Intent(HomeActivity.this, TaskManagerActivity.class));
+					break;
 				case 7:// 高级工具
 					startActivity(new Intent(HomeActivity.this, AToolsActivity.class));
 					break;
