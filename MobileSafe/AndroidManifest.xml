@@ -101,6 +101,11 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/process_widget_provider" />
         </receiver>
+        <receiver android:name="cn.edu.cqu.mobilesafe.receiver.KillAllReceiver">
+            <intent-filter >
+                <action android:name="cn.edu.cqu.mobilesafe.killall"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
