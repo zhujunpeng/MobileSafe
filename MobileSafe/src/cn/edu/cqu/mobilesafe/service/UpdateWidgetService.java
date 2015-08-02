@@ -6,10 +6,14 @@ import java.util.TimerTask;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.appwidget.AppWidgetManager;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.IBinder;
 import android.text.format.Formatter;
+import android.util.Log;
 import android.widget.RemoteViews;
 import cn.edu.cqu.mobilesafe.R;
 import cn.edu.cqu.mobilesafe.receiver.MyWidget;
@@ -21,6 +25,8 @@ public class UpdateWidgetService extends Service {
 	private Timer timer;
 	private TimerTask task;
 	private AppWidgetManager awm;
+	private ScreenOffReceivce offReceivce;
+	private ScreenOnReceivce onReceivce;
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -30,13 +36,62 @@ public class UpdateWidgetService extends Service {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		onReceivce = new ScreenOnReceivce();
+		offReceivce = new ScreenOffReceivce();
+		registerReceiver(offReceivce, new IntentFilter(Intent.ACTION_SCREEN_OFF));
+		registerReceiver(onReceivce, new IntentFilter(Intent.ACTION_SCREEN_ON));
+		if (timer ==null && task == null) {
+			startTimer();
+		}
+	}
 
+	
+
+	public class ScreenOffReceivce extends BroadcastReceiver{
+
+		private static final String TAG = "ScreenOffReceivce";
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			Log.i(TAG, "ÆÁÄ»ËøÆÁ¡£¡£");
+			stopTimer();
+		}
+		
+	}
+	
+	public class ScreenOnReceivce extends BroadcastReceiver{
+
+		private static final String TAG = "ScreenOffReceivce";
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			Log.i(TAG, "ÆÁÄ»½âËø¡£¡£");
+			startTimer();
+		}
+		
+	}
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		if (timer != null && task != null) {
+			stopTimer();
+		}
+		if (offReceivce != null && onReceivce != null) {
+			unregisterReceiver(offReceivce);
+			unregisterReceiver(onReceivce);
+			offReceivce=null;
+			onReceivce=null;
+		}
+	}
+
+	private void startTimer() {
 		awm = AppWidgetManager.getInstance(getApplicationContext());
 		timer = new Timer();
 		task = new TimerTask() {
 
 			@Override
 			public void run() {
+				Log.i(TAG, "¸üÐÂwidget¡£¡£¡£");
 				ComponentName provider = new ComponentName(
 						getApplicationContext(), MyWidget.class);
 				RemoteViews views = new RemoteViews(getPackageName(),
@@ -68,10 +123,7 @@ public class UpdateWidgetService extends Service {
 		};
 		timer.schedule(task, 0, 3000);
 	}
-
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
+	private void stopTimer() {
 		timer.cancel();
 		task.cancel();
 		timer = null;
