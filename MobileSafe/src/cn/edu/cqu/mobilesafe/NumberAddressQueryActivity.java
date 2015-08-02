@@ -1,6 +1,6 @@
 package cn.edu.cqu.mobilesafe;
 
-import cn.edu.cqu.mobilesafe.db.dao.NumberQueryUtils;
+import cn.edu.cqu.mobilesafe.utils.NumberQueryUtils;
 import android.app.Activity;
 import android.os.Bundle;
 import android.text.Editable;

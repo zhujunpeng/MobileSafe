@@ -45,5 +45,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
     </cn.edu.cqu.mobilesafe.ui.SettingClickView>
+    
+    <cn.edu.cqu.mobilesafe.ui.SettingItemView
+        android:id="@+id/scv_wathdog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        zjp:desc_off="程序锁关闭"
+        zjp:desc_on="程序锁开启"
+        zjp:title="程序锁设置" >
+    </cn.edu.cqu.mobilesafe.ui.SettingItemView>
 
 </LinearLayout>

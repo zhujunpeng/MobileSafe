@@ -1,4 +1,4 @@
-package cn.edu.cqu.mobilesafe.db.dao;
+package cn.edu.cqu.mobilesafe.utils;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;

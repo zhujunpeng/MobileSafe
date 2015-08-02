@@ -13,16 +13,17 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import cn.edu.cqu.mobilesafe.service.AddressService;
 import cn.edu.cqu.mobilesafe.service.CallSmsSafeService;
+import cn.edu.cqu.mobilesafe.service.WatchDogService;
 import cn.edu.cqu.mobilesafe.ui.SettingClickView;
 import cn.edu.cqu.mobilesafe.ui.SettingItemView;
 import cn.edu.cqu.mobilesafe.utils.ServiceUtils;
 
 public class SettingActivity extends Activity {
 
-	private SettingItemView siv_update, siv_address,siv_callsmsm_safe;
+	private SettingItemView siv_update, siv_address,siv_callsmsm_safe,scv_wathdog;
 	private SettingClickView scv_changebg;
 	private SharedPreferences sp;
-	private Intent intent_address,callsmsIntent;
+	private Intent intent_address,callsmsIntent,watchdogIntent;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +35,7 @@ public class SettingActivity extends Activity {
 		siv_update = (SettingItemView) findViewById(R.id.siv_update);
 		siv_address = (SettingItemView) findViewById(R.id.siv_address);
 		siv_callsmsm_safe = (SettingItemView) findViewById(R.id.siv_callsmsm_safe);
+		scv_wathdog = (SettingItemView) findViewById(R.id.scv_wathdog);
 		
 		// 设置改变背景
 		scv_changebg = (SettingClickView) findViewById(R.id.scv_changebg);
@@ -141,6 +143,36 @@ public class SettingActivity extends Activity {
 					siv_callsmsm_safe.setChecked(true);
 					// 打开服务
 					startService(callsmsIntent);
+				}
+			}
+		});
+		
+		// 黑名单拦截状态
+		watchdogIntent = new Intent(SettingActivity.this, WatchDogService.class);
+		boolean watchdogRunning = ServiceUtils.isServiceRunning(SettingActivity.this,
+				"cn.edu.cqu.mobilesafe.service.WatchDogService");
+		if (watchdogRunning) {
+			// 服务已经开启
+			scv_wathdog.setChecked(true);
+		}else {
+			scv_wathdog.setChecked(false);
+		}
+		scv_wathdog.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+
+				// 判断是否选中
+				if (scv_wathdog.isChecked()) {
+					// 变为非选中状态
+					scv_wathdog.setChecked(false);
+					// 关闭服务
+					stopService(watchdogIntent);
+				} else {
+					// 选中状态
+					scv_wathdog.setChecked(true);
+					// 打开服务
+					startService(watchdogIntent);
 				}
 			}
 		});

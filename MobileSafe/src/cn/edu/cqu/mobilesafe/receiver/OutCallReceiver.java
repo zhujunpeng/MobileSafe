@@ -1,6 +1,6 @@
 package cn.edu.cqu.mobilesafe.receiver;
 
-import cn.edu.cqu.mobilesafe.db.dao.NumberQueryUtils;
+import cn.edu.cqu.mobilesafe.utils.NumberQueryUtils;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;

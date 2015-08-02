@@ -31,5 +31,14 @@
         android:textColor="#88000000"
         android:textSize="20sp"
         android:text="安装位置"/>
+    <ImageView
+        android:id="@+id/iv_lock_status"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginLeft="3dp"
+        android:layout_marginTop="5dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/unlock" />
 
 </RelativeLayout>

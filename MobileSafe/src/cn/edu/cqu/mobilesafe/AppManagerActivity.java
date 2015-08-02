@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.StatFs;
 import android.text.format.Formatter;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -25,8 +24,9 @@ import android.view.animation.AnimationSet;
 import android.view.animation.ScaleAnimation;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -35,6 +35,7 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import cn.edu.cqu.mobilesafe.db.dao.AppLockDAO;
 import cn.edu.cqu.mobilesafe.domain.AppInfo;
 import cn.edu.cqu.mobilesafe.engine.AppInfoProvider;
 import cn.edu.cqu.mobilesafe.utils.DensityUtil;
@@ -75,6 +76,7 @@ public class AppManagerActivity extends Activity implements OnClickListener {
 	 */
 	private LinearLayout ll_uninstall;
 	private AppInfo appInfo = null;
+	private AppLockDAO appLockDAO;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +89,8 @@ public class AppManagerActivity extends Activity implements OnClickListener {
 		lv_app_manage = (ListView) findViewById(R.id.lv_app_manage);
 		ll_loading = (LinearLayout) findViewById(R.id.ll_loading);
 		tv_number = (TextView) findViewById(R.id.tv_number);
+		
+		appLockDAO = new AppLockDAO(this);
 
 		long sdSize = getAvailSpace(Environment.getExternalStorageDirectory()
 				.getPath());
@@ -183,6 +187,38 @@ public class AppManagerActivity extends Activity implements OnClickListener {
 				contentView.setAnimation(sa);
 			}
 		});
+		
+		lv_app_manage.setOnItemLongClickListener(new OnItemLongClickListener() {
+
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				if (position == 0 || position == userAppInfos.size() + 1) {
+					return true;
+				} else if (position <= userAppInfos.size()) {
+					int newposition = position - 1;
+					appInfo = userAppInfos.get(newposition);
+					System.out.println("用户appInfo---" + appInfo.toString());
+				} else {
+					int newposition = position - 1 - userAppInfos.size() - 1;
+					appInfo = systemAppInfos.get(newposition);
+					System.out.println("系统appInfo---" + appInfo.toString());
+				}
+				ViewHolder holder = (ViewHolder) view.getTag();
+				if(appLockDAO.find(appInfo.getPakageName())){
+					// 数据库中存在，删除记录，修改ui界面为未锁定
+					appLockDAO.delete(appInfo.getPakageName());
+					holder.iv_lock_status.setImageResource(R.drawable.unlock);
+					Toast.makeText(getApplicationContext(), appInfo.getName() + "解除锁定", Toast.LENGTH_SHORT).show();
+				}else {
+					// 数据库中不存在，添加记录，修改ui界面为锁定
+					appLockDAO.add(appInfo.getPakageName());
+					holder.iv_lock_status.setImageResource(R.drawable.lock);
+					Toast.makeText(getApplicationContext(), appInfo.getName() + "锁定", Toast.LENGTH_SHORT).show();
+				}
+				return true;
+			}
+		});
 	}
 
 	/**
@@ -269,6 +305,7 @@ public class AppManagerActivity extends Activity implements OnClickListener {
 						.findViewById(R.id.tv_app_location);
 				holder.app_icon = (ImageView) view
 						.findViewById(R.id.iv_app_icon);
+				holder.iv_lock_status = (ImageView) view.findViewById(R.id.iv_lock_status);
 				view.setTag(holder);
 			}
 			holder.app_icon.setImageDrawable(appInfo.getIcon());
@@ -277,6 +314,12 @@ public class AppManagerActivity extends Activity implements OnClickListener {
 				holder.app_location.setText("手机内存");
 			} else {
 				holder.app_location.setText("外部存储");
+			}
+			// 程序锁的界面
+			if(appLockDAO.find(appInfo.getPakageName())){
+				holder.iv_lock_status.setImageResource(R.drawable.lock);
+			}else {
+				holder.iv_lock_status.setImageResource(R.drawable.unlock);
 			}
 			return view;
 		}
@@ -297,6 +340,7 @@ public class AppManagerActivity extends Activity implements OnClickListener {
 		private TextView app_name;
 		private TextView app_location;
 		private ImageView app_icon;
+		private ImageView iv_lock_status;
 	}
 
 	/**

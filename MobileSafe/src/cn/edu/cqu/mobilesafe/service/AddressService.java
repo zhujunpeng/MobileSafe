@@ -22,7 +22,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 import cn.edu.cqu.mobilesafe.R;
-import cn.edu.cqu.mobilesafe.db.dao.NumberQueryUtils;
+import cn.edu.cqu.mobilesafe.utils.NumberQueryUtils;
 
 public class AddressService extends Service {
 
