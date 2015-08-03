@@ -61,14 +61,17 @@ public class HomeActivity extends Activity {
 				case 0:// 进入手机防盗
 					showLostFindDialog();
 					break;
-				case 2:// 进入应用软件管理
-					startActivity(new Intent(HomeActivity.this, AppManagerActivity.class));
-					break;
 				case 1:// 进入通讯卫士
 					startActivity(new Intent(HomeActivity.this, CallSmsActivity.class));
 					break;
+				case 2:// 进入应用软件管理
+					startActivity(new Intent(HomeActivity.this, AppManagerActivity.class));
+					break;
 				case 3:// 进入进程管理
 					startActivity(new Intent(HomeActivity.this, TaskManagerActivity.class));
+					break;
+				case 4:// 进入流量管理
+					startActivity(new Intent(HomeActivity.this, TrafficManagerActivity.class));
 					break;
 				case 7:// 高级工具
 					startActivity(new Intent(HomeActivity.this, AToolsActivity.class));

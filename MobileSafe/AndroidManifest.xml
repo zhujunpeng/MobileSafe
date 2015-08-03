@@ -60,6 +60,11 @@
         <activity android:name="cn.edu.cqu.mobilesafe.AppManagerActivity"></activity>
         <activity android:name="cn.edu.cqu.mobilesafe.TaskManagerActivity"></activity>
         <activity android:name="cn.edu.cqu.mobilesafe.TaskSettingActivity"></activity>
+        <activity android:name="cn.edu.cqu.mobilesafe.TrafficManagerActivity"></activity>
+         <!-- 修改了一个bug -->
+        <activity android:name="cn.edu.cqu.mobilesafe.EnterPwdActivity"
+            android:launchMode="singleInstance"
+            android:excludeFromRecents="true"></activity>
         <receiver android:name="cn.edu.cqu.mobilesafe.receiver.BootCompeletReceiver">
             <intent-filter >
                 <!-- 监听开机启动 -->
