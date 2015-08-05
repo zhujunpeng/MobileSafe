@@ -2,16 +2,15 @@ package cn.edu.cqu.mobilesafe;
 
 import java.lang.reflect.Method;
 import java.util.List;
-import java.util.zip.Inflater;
 
 import android.app.Activity;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.IPackageDataObserver;
 import android.content.pm.IPackageStatsObserver;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.PackageStats;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.RemoteException;
@@ -113,9 +112,8 @@ public class CleanCashActivity extends Activity {
 							ImageView iv_app_icon = (ImageView) view.findViewById(R.id.iv_app_icon);
 							TextView tv_app_name = (TextView) view.findViewById(R.id.tv_app_name);
 							TextView tv_cache_size = (TextView) view.findViewById(R.id.tv_cache_size);
-							// 清除一个缓存的按钮
+							// 清除一个缓存的按钮,这里无法完成直接清理。。。因为权限不允许
 							ImageView iv_clean_cache = (ImageView) view.findViewById(R.id.iv_clean_cache);
-							
 							
 							iv_app_icon.setImageDrawable(icon);
 							tv_app_name.setText(name);
@@ -130,5 +128,29 @@ public class CleanCashActivity extends Activity {
 
 		}
 
+	}
+	/**
+	 * 清理全部的缓存
+	 * @param v
+	 */
+	public void cleanAll(View v){
+		Method[] methods = PackageManager.class.getMethods();
+		for(Method method:methods){
+			if("freeStorageAndNotify".equals(method.getName())){
+				try {
+					System.out.println("method---" + method.getName());
+					method.invoke(pm, Integer.MAX_VALUE, new IPackageDataObserver.Stub() {
+						@Override
+						public void onRemoveCompleted(String packageName,
+								boolean succeeded) throws RemoteException {
+							System.out.println(succeeded);
+						}
+					});
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				return;
+			}
+		}
 	}
 }
