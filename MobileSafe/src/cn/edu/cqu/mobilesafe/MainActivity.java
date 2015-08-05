@@ -69,7 +69,8 @@ public class MainActivity extends Activity {
 		// 检查升级
 		// checkUpdate();
 		// 复制电话号码归属地数据库
-		copyDB();
+		copyDB("address.db");
+		copyDB("antivirus.db");
 
 		// 渐变的效果
 		AlphaAnimation aa = new AlphaAnimation(0.2f, 1.0f);
@@ -128,11 +129,11 @@ public class MainActivity extends Activity {
 	/**
 	 * 复制数据库到/data/data/cn.edu.cqu.mobilesafe/files/address.db
 	 */
-	private void copyDB() {
+	private void copyDB(String filename) {
 		try {
-			InputStream is = getAssets().open("address.db");
+			InputStream is = getAssets().open(filename);
 			// 在/data/data/cn.edu.cqu.mobilesafe/files/目录下创建一个文件address.db
-			File file = new File(getFilesDir(), "address.db");
+			File file = new File(getFilesDir(), filename);
 			if (file.exists() && file.length() > 0) {
 				// 文件复制过了
 			} else {
